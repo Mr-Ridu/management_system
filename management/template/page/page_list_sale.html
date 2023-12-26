@@ -1,0 +1,100 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %} List Sale {% endblock %}
+{% load custom_filters  %}
+{% block content %}
+
+<div class="content-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+                    <div>
+                        <h4 class="mb-3">Sale List</h4>
+                        <p class="mb-0">A purchase dashboard enables purchasing manager to efficiently track, evaluate,
+                            <br>
+                            and optimize all acquisition processes within a company.
+                        </p>
+                    </div>
+                    <a href="{% url 'page_add_purchase' %}" class="btn btn-primary add-list"><i class="las la-plus mr-3"></i>Add Purchase</a>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="rounded mb-3">
+                    <table class="data-tables table mb-0 tbl-server-info">
+                        <thead class="bg-white text-uppercase">
+                            <tr class="ligth ligth-data">
+                                <th>
+                                    Serial
+                                </th>
+                                <th>Date</th>
+                                <th>C.Name</th>
+                                <th>Memo No</th>
+                                <th>Contact</th>
+                                <th>T.Profit</th>
+                                <th>D.Status</th>
+                                <th>Bazar Taka</th>
+                                <th>B.Status</th>
+                                <th>
+                                    See Details
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="ligth-body">
+                            {% for i in all %}
+                            <tr>
+                                <td>
+                                    {{forloop.counter}}
+                                </td>
+                                <td>{{i.time|dmy}}</td>
+                                <td title="{{i.memono}}">{{i.customer_name}}</td>
+                                <td>{{i.memono}} </td>
+                              
+                            <td> {{i.customer_number}} </td>
+                                <td>
+                                    {{i.profit}}
+                                </td>
+                                <td>
+                                    {% if i.delevery_status %}
+                                    <div class="badge badge-success">Bill Done</div>
+
+                                    {% else %}
+                                    <div class="badge badge-warning">Pending</div>
+
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{i.Bazartaka}}
+                                </td>
+                                <td>
+                                    {% if i.getmoney_status %}
+                                    <div class="badge badge-success">All Paid</div>
+
+                                    {% else %}
+                                    <div class="badge badge-warning">Not Recived yet</div>
+
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if i.getmoney_status %}
+                                    <a href="{% url 'memodetails' i.memono %}"  data-original-title="Details" data-toggle="tooltip" class="btn btn-primary btn-sm" target="_blank"> <i class="fas fa-info-circle"></i></a>
+                                    <a href="{% url 'invoice' i.id %}"  data-original-title="Invoice" data-toggle="tooltip" class="btn btn-warning btn-sm" target="_blank"><i class="fas fa-file-invoice"></i></a>
+
+                                    {% else %}
+                                    <a href="{% url 'memodetails' i.memono %}"  data-original-title="Details" data-toggle="tooltip" class="btn btn-primary btn-sm" target="_blank"><i class="fas fa-info-circle"></i></a>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Page end  -->
+    </div>
+</div>
+
+{%endblock%}

@@ -1,0 +1,55 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Quots{% endblock %}
+{% block content %}  
+<div class="content-page">
+    <div class="container-fluid">
+        <div>
+            <h3 class="mt-3 text-center">Quots</h3>
+        </div>
+
+        <div class="text-center">
+            <h4>Add Quots</h4>
+            <form method="post" data-toggle="validator">
+            {% csrf_token %}
+                <div class="form-group">
+                    <textarea name="thequot" id="thequot" class="form-control" rows="5"></textarea>
+                </div>
+                <button type="submit" class="btn btn-warning">Add Quot</button>
+            </form>
+        </div>
+        <hr>
+
+        <table class="table data-tables">
+            <thead>
+                <tr>
+                    <th>Serial</th>
+                    <th>Quots</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in allquots %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.thequot }}</td>
+                    <td>
+                        {% if i.active %}
+                           <div class="btn "><i class="fas fa-check bg-success"></i> Already Active </div> 
+                        
+                        {% else %}
+                        <a href="{% url 'quotlist' i.id %}" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Active
+                        </a>
+                        <a href="{% url 'quotdel' i.id %}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

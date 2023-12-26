@@ -1,0 +1,31 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Customer Details{% endblock %}
+{% block content %}
+
+
+    <!-- Your page content goes here -->
+    <div class="content-page">
+    <div class="container mt-5">
+        <h1>Customer Details</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Customer Information</h5>
+                        <ul class="list-group">
+                            <li class="list-group-item"><i class="fas fa-user"></i> Customer Name: {{cus.customer_name}}</li>
+                            <li class="list-group-item"><i class="fas fa-envelope"></i> Email: {{cus.customer_email}}</li>
+                            <li class="list-group-item"><i class="fas fa-phone"></i> Phone: {{cus.customer_phone}}</li>
+                            <li class="list-group-item"><i class="far fa-calendar"></i> Due: {{customers_due}} </li>
+                            <li class="list-group-item"><i class="far fa-address"></i> Address: {{cus.customer_adress}}, {{cus.customer_city}}  </li>
+                            <!-- Add more customer details here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+{%endblock%}

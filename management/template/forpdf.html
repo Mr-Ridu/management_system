@@ -1,0 +1,97 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>PDF</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #7e2080;
+            }
+            .details {
+                padding: 5px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            .invoice-details {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+            }
+            .invoice {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body class="invoice">
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>NoiyaBazar.com</p>     
+
+            </div>
+        <div>  
+            
+            <div class="invoice-details">
+                <div>
+                    <p><strong>Customer:</strong> {{ Cname }}</p>
+                    <p><strong>Memo No:</strong> {{ memono }}</p>
+                </div>
+                <div>
+                    <p><strong>Date:</strong> {{ time }}</p>
+                    <p><strong>Biller:</strong> {{ billar }}</p>
+                </div>
+            </div>
+        <div class='details'>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                        {% for product in sales_Products_details %}
+                        <tr>
+                            <td>{{ product.product_name }}</td>
+                            <td>{{ product.product_price }}</td>
+                            <td>{{ product.product_quantity }}</td>
+                            <td>{{ product.subtotal }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div> <br> <br>
+
+                  <p style="text-align:right;">_____________</p>
+                  <p style="text-align:right;">Signeture</p>
+            <hr class='hrItem' />
+       
+    </div>
+    </body>
+</html>

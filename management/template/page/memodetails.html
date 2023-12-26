@@ -1,0 +1,78 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Memo Details for {{memono}} {% endblock %}
+{% block content %}
+
+<div class="content-page">
+    <div class="container-fluid">
+        
+        <div class="invoice">
+          
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Customer:</strong> {{ invdetails.customer_name }}</p>
+                    <p ><strong>Cutomer Code:</strong> {{ invdetails.customer_code }}</p>
+
+                    <p ><strong>Memo No:</strong> {{ memono }}</p>
+                    <p><strong>Date:</strong> {{ invdetails.time }}</p>
+                    <p><strong>Biller:</strong> {{ invdetails.billar }}</p>
+                    <p class=""><strong>Discount:</strong> ৳ {{ invdetails.discount }}</p>
+
+                </div>
+                <div class="col-md-6 text-right">
+                    <p><strong>customer Bill:</strong> ৳ {{ invdetails.total_price }}</p>
+                    <p><strong>Bazar Taka:</strong> ৳ {{ invdetails.Bazartaka }}</p>
+                    <p><strong>Bazar Commision:</strong> ৳ {{ invdetails.bazar_commission }}</p>
+                    <p ><strong class="">Delevery Charge:</strong> ৳ {{invdetails.delevery_charge}}</p>
+                    <p ><strong>Due:</strong> {{ invdetails.due }}</p>
+
+                    <p><strong>Profit:</strong><b> ৳ {{ invdetails.profit }}</b></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+
+                </div>
+                <div class="col-md-6 text-right" >
+                </div>
+            </div>
+    
+
+
+            <table class="table table-border">
+                <thead>
+                    <tr>
+                        <th>no</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Cost</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in sales_Products_details %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ product.product_name }}</td>
+                        <td> ৳ {{ product.product_price }}</td>
+                        <td>{{ product.product_cost }}</td>
+                        <td>{{ product.product_quantity }} {{ product.Product_howmuch }}</td>
+                       
+                        <td> ৳ {{ product.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    
+
+            <div class="text-center">
+                <h4><p><strong>Total Product Prices:</strong> ৳ {{ totalPP }}</p>  </h4>
+            </div>
+  
+        </div>
+    </div>
+</div>
+
+{%endblock%}

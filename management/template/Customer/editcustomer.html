@@ -1,0 +1,74 @@
+
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Edit customer Details{% endblock %}
+{% block content %}
+
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+       <div class="row">
+           <div class="col-sm-12">
+               <div class="card">
+                   <div class="card-header d-flex justify-content-between">
+                       <div class="header-title">
+                           <h4 class="card-title">Edit Customer</h4>
+                       </div>
+                   </div>
+                   <div class="card-body">
+                       <form method="post" data-toggle="validator">
+                        {% csrf_token %}
+                           <div class="row"> 
+                               <div class="col-md-6">                      
+                                   <div class="form-group">
+                                      <b>Customer Code {{customer.customer_code}}</b>
+                                   </div>
+                               </div>    
+                               <div class="col-md-6">                      
+                                   <div class="form-group">
+                                       <label>Name </label>
+                                       <input type="text" class="form-control"  name="customer_name" value="{{customer.customer_name}}" >
+                                       <div class="help-block with-errors"></div>
+                                   </div>
+                               </div>    
+                               <div class="col-md-6">
+                                   <div class="form-group">
+                                       <label>Email </label>
+                                       <input type="email" class="form-control"  name="customer_email" value="{{customer.customer_email}}" >
+                                       <div class="help-block with-errors"></div>
+                                   </div>
+                               </div> 
+                               <div class="col-md-6">
+                                   <div class="form-group">
+                                       <label>Phone Number </label>
+                                       <input type="number" class="form-control"  name="customer_phone" value="{{customer.customer_phone}}" >
+                                       <div class="help-block with-errors"></div>
+                                   </div>
+                               </div> 
+ 
+                               <div class="col-md-12">
+                                   <div class="form-group">
+                                       <label>Address</label>
+                                       <textarea class="form-control" name="customer_adress" rows="4" >{{customer.customer_adress}}</textarea>
+                                   </div>
+                               </div>
+                               <div class="col-md-12">
+                                   <div class="form-group">
+                                       <label>City </label>
+                                       <input type="text" class="form-control"  name="customer_city" value="{{customer.customer_city}}" >
+                                       <div class="help-block with-errors"></div>
+                                   </div>
+                               </div> 
+                           </div>                            
+                           <button type="submit" class="btn btn-primary mr-2">Edit Customer</button>
+                           
+                       </form>
+                       <!-- <a href="{% url 'editcustomer' customer.id %}" class="btn btn-danger mr-2">Delete Customer</a> -->
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!-- Page end  -->
+   </div>
+     </div>
+
+    {% endblock %}

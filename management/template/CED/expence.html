@@ -1,0 +1,119 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Expences{% endblock %}
+{% block content %}
+
+<div class="content-page">
+    <div class="container-fluid">
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+            <h4 class="mb-3">Expences</h4>
+            <p class="mb-0">All of expences gives here</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="card-title">Add Expences</h4>
+                </div>
+          
+            </div>
+
+            <div class="card-body">
+                <form method="post" data-toggle="validator">
+                    {% csrf_token %}
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="amount">Amount</label>
+                                <input type="number" name="amount" id="amount" placeholder="Amount"
+                                    class="form-control form-control-md" required>
+                            </div>
+                        </div>
+                                       <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="expence_by">Expence by</label>
+                                <select name="expence_by" id="expence_by" class="selectpicker form-control"
+                                    data-style="py-0" data-live-search="true" required>
+                                    <option>Shamim</option>
+                                    <option>Sumon</option>
+                                    <option>Riyad</option>
+                                    <option>Office</option>
+                                    <option>Nurulla</option>
+                                    <option>Sani</option>
+                                    <option>Others</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="note"> Note</label>
+                                <textarea name="note" id="note" class="form-control" cols="15" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="">
+                            <input type="submit" class="btn btn-danger mt-5" value="Submit">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive rounded mb-3">
+                    <table class="data-tables table mb-0 tbl-server-info">
+                        <thead class="bg-white text-uppercase">
+                            <tr class="ligth ligth-data">
+                                <th>
+                                    Serial
+                                </th>
+                                <th>Date</th>
+                                <th>amount</th>
+                                <th>Expences By</th>
+                                <th>Note</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="ligth-body">
+                            {% for i in ex %}
+                            <tr>
+                                <td>
+                                    {{forloop.counter}}
+                                </td>
+                                <td>
+                                    {{i.time}}
+                                </td>
+                                <td>{{i.amount}}</td>
+                                <td>{{i.expence_by}} </td>
+                                <td> {{i.note}} </td>
+                                <td>
+                                    <div class="d-flex align-items-center list-action">
+
+                                        <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top"
+                                            title="" data-original-title="Edit" href=""><i
+                                                class="ri-pencil-line mr-0"></i></a>
+                                        <a class="badge bg-warning mr-2" data-toggle="tooltip" data-placement="top"
+                                            title="" data-original-title="Delete" href="#"><i
+                                                class="ri-delete-bin-line mr-0"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                   
+<!-- ---------------------testing -->
+
+
+<!-- ---------------------testing -->
+
+            </div>
+        </div>
+        <!-- Page end  -->
+    </div>
+</div>
+
+{%endblock%}

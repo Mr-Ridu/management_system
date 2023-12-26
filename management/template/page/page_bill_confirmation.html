@@ -1,0 +1,93 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Bill Confirmation {% endblock %}
+{% load custom_filters  %}
+
+{% block content %}
+
+<div class="content-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+                    <div>
+                        <h4 class="mb-3">Bill Confirmation List</h4>
+                        <p class="mb-0">A purchase dashboard enables purchasing manager to efficiently track, evaluate,
+                            <br>
+                            and optimize all acquisition processes within a company.
+                        </p>
+                    </div>
+                    <a href="{% url 'page_add_purchase' %}" class="btn btn-primary add-list"><i
+                            class="las la-plus mr-3"></i>Add Purchase</a>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="table-responsive rounded mb-3">
+                    <table class="data-tables table mb-0 tbl-server-info">
+                        <thead class="bg-white text-uppercase">
+                            <tr class="ligth ligth-data">
+                                <th>
+                                    Serial
+                                </th>
+                                <th>Date</th>
+                                <th>Customer Name</th>
+                                <th>Memo No</th>
+                                <th>Get Money Status</th>
+                                <th>Total Bill</th>
+                                <th>Due</th>
+
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="ligth-body">
+                            {% for i in plp %}
+                            <tr>
+                                <td>
+                                    {{forloop.counter}}
+                                </td>
+                                <td>{{i.time|dmy}}</td>
+                                <td title="{{i.memono}}">{{i.customer_name}}</td>
+                                <td>{{i.memono}}</td>
+
+                                <td>
+                                    {% if i.getmoney_status %}
+                                    <div class="badge badge-success">All Receved</div>
+
+                                    {% else %}
+                                    <div class="badge badge-warning">Not Recived yet</div>
+
+                                    {% endif %}
+                                </td>
+                                <td>{{i.total_price}}</td>
+
+                                <td>
+                                    {{i.due}}
+                                </td>
+                                <td>
+                                    {% if i.delevery_status and not i.getmoney_status %}
+
+                                    <div class="d-flex align-items-center list-action">
+                                        <a class="badge badge-info fas fa-truck " data-toggle="tooltip" data-placement="top"
+                                            title="" data-original-title="Receved" href="{% url 'page_bill_confirmation' i.id %}"> <span class="text-danger">RCV</span>
+                                        </a>
+                                       
+                                    </div>
+
+                                    {% else %}
+                                    Waiting..
+                                    {% endif %}
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Page end  -->
+    </div>
+</div>
+
+{%endblock%}

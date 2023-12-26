@@ -1,0 +1,266 @@
+{% load custom_filters %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        /* Your CSS styles go here */
+        @import url('https://fonts.maateen.me/adorsho-lipi/font.css');
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            .invoice {
+                margin: 0px;
+
+            }
+        }
+
+        @page {
+            size: A5 landscape;
+        }
+
+        body {
+            font-family: 'AdorshoLipi', sans-serif;
+            font-size: 0.6rem;
+        }
+
+        body * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .invoice {
+            width: 45%;
+            height: auto;
+            margin: 0px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .invoice-header {
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            line-height: 17px;
+            margin-top: 2px;
+        }
+
+        .invoice-items {
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+            font-size: 0.58rem;
+        }
+
+        .invoice-items th,
+        .invoice-items td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            line-height: 2px;
+        }
+
+        .flx {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .thank {
+            text-align: center;
+            font-size: 0.4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="no-print">
+    <button><a href="" id="printButton" class="btn btn-warning">Print</a></button>
+   <button><a href="{% url 'home' %}" class="btn btn-warning">dashboard </a></button>      
+    </div>
+
+    <div class="container">
+        <div class="invoice">
+            <div class="invoice-header">
+                <h1> নইয়াবাজার.কম</h1>
+                <h3>শহীদ মিনার মোড়, মেছুয়া বাজার, নেত্রকোণা ।</h3>
+                <h3>০৯৬১৩৮২১৯৩৫, ০১৬২৭৮৮৩২৬৫</h3>
+            </div>
+
+            <div class="invoice-details">
+                <div>
+                    <p><strong>নাম:</strong> {{ invdetails.customer_name }}</p>
+                    <p><strong>ঠিকানা:</strong> {{ cusdeta.customer_adress }}</p>
+                    <p><strong>মোবাইল নম্বর:</strong>{{ invdetails.customer_number|e_2_b }}</p>
+                </div>
+                <div>
+                    <p><strong>মেমো নং:</strong> {{ memono|e_2_b }}</p>
+                    <p><strong>তারিখ:</strong> {{ memotime|e_2_b }}</p>
+                </div>
+            </div>
+            <table class="invoice-items">
+                <thead>
+                    <tr>
+                        <th>পণ্যের নাম</th>
+                        <th>দর</th>
+                        <th>পরিমান</th>
+                        <th>মোট</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in sales_Products_details %}
+                    <tr>
+                        <td>{{ product.product_name }}</td>
+                        <td> {{ product.product_price|e_2_b }} ৳</td>
+                        <td>{{ product.product_quantity|e_2_b }} {{ product.Product_howmuch }}</td>
+                        <td> {{ product.subtotal|e_2_b }} ৳</td>
+                    </tr>
+
+                    {% endfor %}
+                    <tr>
+                        <td colspan="3">ডেলিভারি চার্জ</td>
+                        <td>{{invdetails.delevery_charge|e_2_b}} ৳</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">সর্বমোট</td>
+                        <td>{{tp|e_2_b}} ৳
+
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <div class="invoice-details flx">
+
+                {% if invdetails.due > 0 %}
+                <div>
+                    <p class=""><strong>বাকি:</strong> {{ invdetails.due|e_2_b }} ৳</p>
+                </div>
+                {% endif %}
+                {% if invdetails.discount > 0 %}
+                <div>
+                    <p class=""><strong>ছাড়:</strong> {{ invdetails.discount|e_2_b }} ৳</p>
+                </div>
+                {% endif%}
+            </div>
+
+            <div class="invoice-total flx">
+                <p><strong>সাক্ষর : _________</strong></p>
+            </div>
+
+            <p class="thank"> {{thequot.thequot}}</p>
+
+        </div>
+        <!-- ----------tst----- -->
+        <div class="invoice">
+            <div class="invoice-header">
+                <h1> নইয়াবাজার.কম</h1>
+                <h3>শহীদ মিনার মোড়, মেছুয়া বাজার, নেত্রকোণা ।</h3>
+                <h3>০৯৬১৩৮২১৯৩৫, ০১৬২৭৮৮৩২৬৫</h3>
+            </div>
+
+            <div class="invoice-details">
+                <div>
+                    <p><strong>নাম:</strong> {{ invdetails.customer_name }}</p>
+                    <p><strong>ঠিকানা:</strong> {{ cusdeta.customer_adress }}</p>
+                    <p><strong>মোবাইল নম্বর:</strong>{{ invdetails.customer_number|e_2_b }}</p>
+                </div>
+                <div>
+                    <p><strong>মেমো নং:</strong> {{ memono|e_2_b }}</p>
+                    <p><strong>তারিখ:</strong> {{ memotime|e_2_b }}</p>
+                </div>
+            </div>
+            <table class="invoice-items">
+                <thead>
+                    <tr>
+                        <th>পণ্যের নাম</th>
+                        <th>দর</th>
+                        <th>পরিমান</th>
+                        <th>মোট</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in sales_Products_details %}
+                    <tr>
+                        <td>{{ product.product_name }}</td>
+                        <td> {{ product.product_price|e_2_b }} ৳</td>
+                        <td>{{ product.product_quantity|e_2_b }} {{ product.Product_howmuch }}</td>
+                        <td> {{ product.subtotal|e_2_b }} ৳</td>
+                    </tr>
+
+                    {% endfor %}
+                    <tr class="bload">
+                        <td colspan="3">ডেলিভারি চার্জ</td>
+                        <td>{{invdetails.delevery_charge|e_2_b}} ৳</td>
+                    </tr>
+                    <tr class="bload">
+                        <td colspan="3">সর্বমোট</td>
+                        <td>{{tp|e_2_b}} ৳
+
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <div class="invoice-details flx">
+
+                {% if invdetails.due > 0 %}
+                <div>
+                    <p class=""><strong>বাকি:</strong> {{ invdetails.due|e_2_b }} ৳</p>
+                </div>
+                {% endif %}
+                {% if invdetails.discount > 0 %}
+                <div>
+                    <p class=""><strong>ছাড়:</strong> {{ invdetails.discount|e_2_b }} ৳</p>
+                </div>
+                {% endif%}
+            </div>
+
+            <div class="invoice-total flx">
+                <p><strong>সাক্ষর : _________</strong></p>
+            </div>
+
+            <p class="thank"> {{thequot.thequot}}</p>
+
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+        // Get a reference to the print button
+        const printButton = document.getElementById("printButton");
+
+        // Add a click event listener to the print button
+        printButton.addEventListener("click", function () {
+            // Call the window.print() function to trigger the print dialog
+            window.print();
+        });
+    </script>
+</body>
+
+</html>

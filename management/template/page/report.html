@@ -1,0 +1,218 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Report for {{input_date}} {% endblock %}
+{% block content %}
+
+<style>
+    .invoice-items th,
+    .invoice-items td {
+        border: 1px solid #ccc;
+        padding: 8px;
+    }
+</style>
+<div class="content-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Input Date here</h5>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="date" class="form-contro form-control-sm" name="input_date" id="inputDate">
+                        <button class="btn btn-primary btn-sm ml-2" type="submit">Enter Date</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <section class="mt-5">
+            <h2 class="mb-4 text-center">Financial Summary of {{input_date}}</h2>
+            <div class="row text-center">
+
+                <div class="col-md-3">
+                    <div class="card bg-primary">
+                        <div class="card-body">
+                            <h3 class="card-title">Added Cash</h3>
+                            <p class="card-text">{{today_cash}} ৳</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info">
+                        <div class="card-body">
+                            <h3 class="card-title">Total Sale</h3>
+                            <p class="card-text">{{total_sale}} ৳</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-secondary">
+                        <div class="card-body">
+                            <h3 class="card-title">Total Cost</h3>
+                            <p class="card-text">{{total_cost}} ৳</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger">
+                        <div class="card-body">
+                            <h3 class="card-title">Expenses</h3>
+                            <p class="card-text">{{today_exp}} ৳</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-primary">
+                        <div class="card-body ">
+                            <h3 class="card-title">Due</h3>
+                            <p class="card-text">{{total_due}} ৳</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success">
+                        <div class="card-body ">
+                            <h3 class="card-title">Bazar Commision</h3>
+                            <p class="card-text">{{total_B_C}} ৳</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card bg-success">
+                        <div class="card-body">
+                            <h3 class="card-title">Delivery Commision</h3>
+                            <p class="card-text">{{total_D_C}} ৳</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card bg-warning">
+                        <div class="card-body">
+                            <h3 class="card-title">Total Commision</h3>
+                            <p class="card-text">{{toco}} ৳</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <hr>
+
+
+        <div class="row ">
+
+            <div class="col-md-6 border">
+                {% if cash%}
+                <h4 class="text-center">Cash Added</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Added By</th>
+                            <th>Amount</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for i in cash %}
+                        <tr>
+                            <td>{{i.added_by}} </td>
+                            <td>{{i.amount}} ৳</td>
+                            <td>{{i.note}} </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else%}
+                <h4 class="text-center"> No Cash Added</h4>
+                {% endif %}
+            </div>
+
+
+
+
+
+            <div class="col-md-6 border">
+                {% if te%}
+                <h4 class="text-center">Expences</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Expences By</th>
+                            <th>Amount</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for i in te %}
+                        <tr>
+                            <td>{{i.expence_by}} </td>
+                            <td>{{i.amount}} ৳</td>
+                            <td>{{i.note}} </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else%}
+                <h4 class="text-center">No Expences</h4>
+
+                {% endif %}
+            </div>
+
+        </div>
+            <br>
+            <hr>
+
+            <div class=" border">
+
+                <h4 class="text-center">DUE</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Serial
+                            </th>
+                            <th>Date</th>
+                            <th>amount</th>
+                            <th>Taken By</th>
+                            <th>Memo No</th>
+                            <th>Contact Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in bazd %}
+                        {% if i.due > 0 %}
+                        <tr>
+                            <td>
+                                {{forloop.counter}}
+                            </td>
+                            <td>
+                                {{i.time}}
+                            </td>
+                            <td>{{i.due}} ৳</td>
+                            <td>{{i.customer_name}} </td>
+                            <td>{{i.memono}} </td>
+                            <td>{{i.customer_number}} </td>
+                   
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+         
+
+            </div>
+
+
+
+    </div>
+</div>
+</div>
+
+{%endblock%}

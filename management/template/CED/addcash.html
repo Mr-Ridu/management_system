@@ -1,0 +1,111 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Add Cash{% endblock %}
+{% block content %}
+
+<div class="content-page">
+    <div class="container-fluid">
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+            <h4 class="mb-3">Add Cash</h4>
+            <p class="mb-0">All of Added cashes details gives here
+
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="card-title">Add Cash</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="post" data-toggle="validator">
+                    {% csrf_token %}
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="amount">Amount</label>
+                                <input type="number" id="amount" name="amount" placeholder="Amount"
+                                    class="form-control form-control-md" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="addby">Add by</label>
+                                <select name="added_by" id="addby" class="selectpicker form-control" data-live-search="true" data-style="py-0" required>
+                                    <option>Sani</option>
+                                    <option>Sumon</option>
+                                    <option>Riyad</option>
+                                    <option>Sagor</option>
+                                    <option>Others</option>
+                                    <option>Shamim</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="note">Note</label>
+                                <textarea name="note" id="note" class="form-control" cols="10" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="">
+                            <input type="submit" class="btn btn-primary mt-5" value="Submit">
+                        </div>
+                    </div>
+
+            </div>
+            </form>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive rounded mb-3">
+                    <table class="data-tables table mb-0 tbl-server-info">
+                        <thead class="bg-white text-uppercase">
+                            <tr class="ligth ligth-data">
+                                <th>
+                                    Serial
+                                </th>
+                                <th>Added Time</th>
+                                <th>Amount</th>
+                                <th>Add By</th>
+                                <th>Recorded by</th>
+                                <th>Note</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="ligth-body">
+                            {% for i in cash %}
+                            <tr>
+                                <td>
+                                    {{forloop.counter}}
+                                </td>
+
+                                <td> {{i.time}} </td>
+                                <td> {{i.amount}} </td>
+                                <td> {{i.added_by}} </td>
+                                <td> {{i.recorded_by}} </td>
+                                <td> {{i.note}} </td>
+                                <td>
+                                <div class="d-flex align-items-center list-action">
+
+                                    <a class="badge bg-success mr-2" data-toggle="tooltip" data-placement="top" title=""
+                                        data-original-title="Edit" href=""><i class="ri-pencil-line mr-0"></i></a>
+                                    <a class="badge bg-warning mr-2" data-toggle="tooltip" data-placement="top" title=""
+                                        data-original-title="Delete" href="#"><i
+                                            class="ri-delete-bin-line mr-0"></i></a>
+                                </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Page end  -->
+    </div>
+</div>
+
+{%endblock%}

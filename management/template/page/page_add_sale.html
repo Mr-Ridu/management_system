@@ -1,0 +1,249 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Bill{% endblock %}
+{% block content %}
+
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="card mt-6">
+                    <div class="card-header d-flex justify-content-between">
+                        <div class="header-title d-flex">
+                            <h4 class="card-title">Add Sale</h4>
+                            <h6 class="ml-5">
+                                <p>Total Price: <span id="totalPrice">0.00 ৳</span></p>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" id="selectedProductsForm" data-toggle="validator" target="_blank">
+                            {% csrf_token %}
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <b> Customer Name: <i>{{p.customer_name}}</i></b>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <b>Memo No: <i>{{p.memono}}</i></b>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <b>Bazar Taka: <i>{{p.Bazartaka}}</i></b>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <b>Billar: <i>{{p.billar}}</i></b>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <table class="table table-borderless">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th>Selected Product</th>
+                                                <th>Price</th>
+                                                <th>Cost</th>
+                                                <th>Quantity</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="selectedProductsTableBody">
+                                            <!-- Selected product rows will be added here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row mb-3">
+                               
+                                <div class="col-md-4">
+                                    <label for="dc">Delivery Charge</label>
+                                    <input id="dc" type="number" placeholder="" class="form-control form-control-md"
+                                        value="10" name="delevery_charge">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="due">Due</label>
+                                    <input id="due" type="number" placeholder="Enter Due Here"
+                                        class="form-control form-control-md" name="due" value="0">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="dcn">Discount</label>
+                                    <input id="dcn" type="number" placeholder="Enter Discount Here"
+                                        class="form-control form-control-md" name="discount" required>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary" value="Add Sale">
+                                <button type="reset" class="btn btn-danger">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 table-hover">
+                <table class="data-tables table mb-0 tbl-server-info dataTable">
+                    <thead class="bg-white text-uppercase">
+                        <tr class="light light-data">
+                            <th>Product</th>
+                            <th>Code</th>
+                        </tr>
+                    </thead>
+                    <tbody class="light-body">
+                        {% for p in pro %}
+                        <tr data-product-name="{{ p.product_name }}">
+                            <td>{{ p.product_name }}</td>
+                            <td>{{ p.product_code }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectedProductsTableBody = document.getElementById("selectedProductsTableBody");
+        const dataTable = document.querySelector(".data-tables");
+        const selectedProducts = {};
+
+        dataTable.addEventListener("click", function (event) {
+            if (event.target.tagName === "TD") { // Check if the clicked element is a table cell
+                const productName = event.target.parentElement.getAttribute("data-product-name");
+
+                // Create a new row for the selected product
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>${productName}</td>
+                    <td><input type="number" class="form-control form-control-sm" name="product_price_${productName}" required></td>
+                    <td><input type="number" class="form-control form-control-sm" name="product_cost_${productName}" ></td>
+                    <td>
+                        <div class="input-group">
+                            <input type="number" class="form-control form-control-sm" name="product_quantity_${productName}" aria-label="Text input with dropdown button">
+                            <select class="form-select form-select-sm" name="product_howmuch_${productName}">
+                                <option value="কেজি">কেজি</option>
+                                <option value="লিটার">লিটার</option>
+                                <option value="টি">টি<option>
+                                <option value="হালি">হালি</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td><button class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i></button></td>
+                `;
+
+                // Append the new row to the selected products table
+                selectedProductsTableBody.appendChild(newRow);
+
+                // Initialize selected product information
+                selectedProducts[productName] = {
+                    price: 0,
+                    cost: 0,
+                    quantity: 0,
+                    howmuch: 'kg' // Default unit type (you can change this as needed)
+                };
+
+                // Add event listener to remove the row
+                const removeButton = newRow.querySelector(".remove-product");
+                removeButton.addEventListener("click", function () {
+                    selectedProductsTableBody.removeChild(newRow);
+                    delete selectedProducts[productName];
+                    updateTotalPrice();
+                });
+
+                // Add event listeners for input changes to update selected product information
+                const priceInput = newRow.querySelector(`[name="product_price_${productName}"]`);
+                priceInput.addEventListener("input", function () {
+                    selectedProducts[productName].price = parseFloat(priceInput.value) || 0;
+                    updateTotalPrice();
+                });
+
+                const costInput = newRow.querySelector(`[name="product_cost_${productName}"]`);
+                costInput.addEventListener("input", function () {
+                    selectedProducts[productName].cost = parseFloat(costInput.value) || 0;
+                    updateTotalPrice();
+                });
+
+                const quantityInput = newRow.querySelector(`[name="product_quantity_${productName}"]`);
+                quantityInput.addEventListener("input", function () {
+                    selectedProducts[productName].quantity = parseFloat(quantityInput.value) || 0;
+                    updateTotalPrice();
+                });
+            }
+        });
+
+        // Function to calculate and update the total price
+        function updateTotalPrice() {
+            let total = 0;
+
+            // Calculate the subtotal based on the selected products
+            for (const productName in selectedProducts) {
+                const quantity = parseFloat(selectedProducts[productName].quantity);
+                const price = parseFloat(selectedProducts[productName].price);
+                const cost = parseFloat(selectedProducts[productName].cost);
+
+                if (!isNaN(quantity) && !isNaN(price) && !isNaN(cost)) {
+                    const subtotal = quantity * price;
+                    total += subtotal;
+                }
+            }
+
+            // Get the delivery charge and discount values
+            const deliveryCharge = parseFloat(document.querySelector('#dc').value) || 0;
+            const discount = parseFloat(document.querySelector('#dcn').value) || 0;
+
+            // Calculate the total price including delivery charge and discount
+            total = total + deliveryCharge - discount;
+
+            // Update the total price element in the HTML
+            const totalPriceElement = document.getElementById("totalPrice");
+            totalPriceElement.textContent = `${total.toFixed(2)} ৳`;
+        }
+
+        // Function to submit the form with selected product data as JSON
+        function submitFormWithSelectedProducts() {
+            // Populate the selectedProducts object with input values
+            for (const productName in selectedProducts) {
+                selectedProducts[productName].price = document.querySelector(`[name="product_price_${productName}"]`).value;
+                selectedProducts[productName].cost = document.querySelector(`[name="product_cost_${productName}"]`).value;
+                selectedProducts[productName].quantity = document.querySelector(`[name="product_quantity_${productName}"]`).value;
+                selectedProducts[productName].howmuch = document.querySelector(`[name="product_howmuch_${productName}"]`).value;
+            }
+
+            // Add the JSON data to a hidden input field in the form
+            const selectedProductsInput = document.createElement("input");
+            selectedProductsInput.type = "hidden";
+            selectedProductsInput.name = "selected_products_json";
+            selectedProductsInput.value = JSON.stringify(selectedProducts);
+            selectedProductsForm.appendChild(selectedProductsInput);
+
+            // Submit the form
+            selectedProductsForm.submit();
+        }
+
+        // Add event listener to the form for submitting selected products as JSON
+        const selectedProductsForm = document.getElementById("selectedProductsForm");
+        selectedProductsForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            submitFormWithSelectedProducts();
+        });
+
+        // Add event listeners for input changes to trigger the total price update
+        document.querySelector('#dc').addEventListener("input", updateTotalPrice);
+        document.querySelector('#dcn').addEventListener("input", updateTotalPrice);
+
+        // Initial calculation
+        updateTotalPrice();
+    });
+
+</script>
+
+{% endblock %}

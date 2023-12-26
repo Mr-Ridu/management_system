@@ -1,0 +1,1027 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Report {% endblock %}
+{% block content %}
+
+
+<div class="content-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Date Input Form</h5>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="date" class="form-control" name="input_date" id="inputDate" value="2019-12-18">
+                        <button class="btn btn-primary" type="submit">OK</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <h5>Time Input Form</h5>
+
+                <input type="time" name="" class="form-control" id="">
+            </div>
+        </div>
+
+
+
+        <section class="mt-5">
+            <h2 class="mb-4 text-center">Financial Summary of {{input_date}}</h2>
+            <div class="row text-center">
+
+                <div class="col-md-3">
+                    <div class="card bg-primary">
+                        <div class="card-body">
+                            <h3 class="card-title">Added Cash</h3>
+                            <p class="card-text">${{today_cash}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info">
+                        <div class="card-body">
+                            <h3 class="card-title">Total Sale</h3>
+                            <p class="card-text">${{today_cash}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-secondary">
+                        <div class="card-body">
+                            <h3 class="card-title">Total Cost</h3>
+                            <p class="card-text">${{today_cash}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger">
+                        <div class="card-body">
+                            <h3 class="card-title">Expenses</h3>
+                            <p class="card-text">${{today_exp}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card bg-success">
+                        <div class="card-body ">
+                            <h3 class="card-title">Bazar Commision</h3>
+                            <p class="card-text">${{total_B_C}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-success">
+                        <div class="card-body">
+                            <h3 class="card-title">Delivery Commision</h3>
+                            <p class="card-text">${{total_D_C}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card bg-warning">
+                        <div class="card-body">
+                            <h3 class="card-title">Total Commision</h3>
+                            <p class="card-text">${{toco}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+
+        <section>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Cash In</th>
+                        <th>Expense</th>
+                        <th>Sale Details</th>
+                        <th>Cost Details</th>
+                        <th>BC Detail</th>
+                        <th>DC Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <ul class="list-unstyled">
+
+                            
+                                    <th>Added by</th>
+                                    <th>Amount</th>
+                                    <th>Note</th>
+                            
+                                {% for i in cash %}
+                                
+                                    <strong>:</strong> {{i.added_by}} <br>
+                                    <strong>Amount:</strong> {{i.amount}} <br>
+                                    <strong>:</strong> {{i.note}} <br>
+                                
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            {% for i in te %}
+                            {{i.expence_by}} - {{i.amount}} - {{i.note}} <br>
+                            {% endfor %}
+                        </td>
+                        </td>
+                        <td>
+                            {% for i in sale %}
+                            {{i.expense_by}} - {{i.amount}} - {{i.note}} <br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for i in cost %}
+                            {{i.expense_by}} - {{i.amount}} - {{i.note}} <br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for i in bazd %}
+                            {{i.memono}} ->
+                            {{i.bazar_commission}} <br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for i in bazd %}
+                            {{i.memono}} ->
+                            {{i.delevery_charge}} <br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectedProductsTableBody = document.getElementById("selectedProductsTableBody");
+        const productRows = document.querySelectorAll(".ligth-body tr");
+
+        const selectedProducts = {}; // Create an object to hold the selected products
+
+        productRows.forEach(row => {
+            row.addEventListener("click", function () {
+                const productName = row.getAttribute("data-product-name");
+
+                // Create a new row for the selected product
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>${productName}</td>
+                    <td><input type="number" class="form-control form-control-sm" name="product_price_${productName}" ></td>
+                    <td><input type="number" class="form-control form-control-sm" name="product_cost_${productName}" ></td>
+                    <td><input type="number" class="form-control form-control-sm" name="product_quantity_${productName}" ></td>
+                    <td><button class="btn btn-danger btn-sm remove-product">Remove</button></td>
+                `;
+
+                // Append the new row to the selected products table
+                selectedProductsTableBody.appendChild(newRow);
+
+                // Store the selected product information in the selectedProducts object
+                selectedProducts[productName] = {
+                    price: '',
+                    cost: '',
+                    quantity: ''
+                };
+
+                // Add event listener to remove the row
+                const removeButton = newRow.querySelector(".remove-product");
+                removeButton.addEventListener("click", function () {
+                    selectedProductsTableBody.removeChild(newRow);
+                    delete selectedProducts[productName];
+                });
+            });
+        });
+
+        // Submit the form with the selected product data as JSON
+        const selectedProductsForm = document.getElementById("selectedProductsForm");
+        selectedProductsForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Populate the selectedProducts object with input values
+            for (const productName in selectedProducts) {
+                selectedProducts[productName].price = document.querySelector(`[name="product_price_${productName}"]`).value;
+                selectedProducts[productName].cost = document.querySelector(`[name="product_cost_${productName}"]`).value;
+                selectedProducts[productName].quantity = document.querySelector(`[name="product_quantity_${productName}"]`).value;
+            }
+
+            // Add the JSON data to a hidden input field in the form
+            const selectedProductsInput = document.createElement("input");
+            selectedProductsInput.type = "hidden";
+            selectedProductsInput.name = "selected_products_json";
+            selectedProductsInput.value = JSON.stringify(selectedProducts);
+            selectedProductsForm.appendChild(selectedProductsInput);
+
+            // Submit the form
+            selectedProductsForm.submit();
+        });
+
+        // ... Your existing JavaScript code ...
+
+        // Update total price based on selected products
+        function updateTotalPrice() {
+            let totalPrice = 0;
+
+            for (const productName in selectedProducts) {
+                const quantity = parseFloat(selectedProducts[productName].quantity);
+                const price = parseFloat(selectedProducts[productName].price);
+
+                if (!isNaN(quantity) && !isNaN(price)) {
+                    totalPrice += quantity * price;
+                }
+            }
+
+            const totalPriceElement = document.getElementById("totalPrice");
+            totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
+        }
+
+        // Add event listeners for quantity and price input changes
+        selectedProductsTableBody.addEventListener("input", updateTotalPrice);
+
+        // ... Your existing JavaScript code ...
+
+    });
+</script>
+
+
+{%endblock%}
+
+if thedue is not None:
+due.objects.create(
+    amount= thedue,
+    memodeo= p.memono,
+    due_taken_by= p.customer_name,
+    number= p.customer_number,
+    note= 'Direct from Bill',
+)
+messages.success(request, 'Bill added with due successfully')
+return invoice(request, thememoid)     
+
+
+
+if request.method == 'POST':
+        form = dueforms(request.POST)
+        if form.is_valid():
+            ac = form.save(commit=False)
+            ac.recorded_by = request.user.username
+            if due.objects.filter(memodeo=ac.memodeo).exists():
+                existing_due = due.objects.get(memodeo=ac.memodeo)
+                existing_due.amount += int(ac.amount)
+                existing_due.save()
+                messages.success(request, 'Due Added in existing Memono!!')
+                return redirect('dues')
+            else:  
+                ac.save()
+            messages.success(request, 'Due Added!!')
+            return redirect('dues')
+
+
+        <!-- ___________---niche page add sale------- -->
+
+        {% extends 'main.html' %}
+{% load static %}
+{% block title %}Bill{% endblock %}
+{% block content %}
+
+<div class="content-page">
+    <div class="container-fluid add-form-list">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="card mt-6">
+                    <div class="card-header d-flex justify-content-between">
+                        <div class="header-title">
+                            <h4 class="card-title">Add Sale </h4>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" id="selectedProductsForm" data-toggle="validator">
+                            {% csrf_token %}
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <b> Customer Name: <i>{{p.customer_name}}</i></b>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <b>Memo No: <i>{{p.memono}}</i></b>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <b>Bazar Taka: <i>{{p.Bazartaka}}</i></b>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <b>Billar: <i>{{request.user}}</i></b>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <table class="table table-borderless">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th>Selected Product</th>
+                                                <th>Price</th>
+                                                <th>Cost</th>
+                                                <th>Quantity</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="selectedProductsTableBody">
+
+                                            <!-- Selected product rows will be added here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+<hr>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="dc">Delivery Charge</label>
+                                    <input id="dc" type="number" placeholder="" class="form-control form-control-md"
+                                        value="10" name="delevery_charge">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="due">Due</label>
+                                    <input id="due" type="number" placeholder="Enter Due Here"
+                                        class="form-control form-control-md" name="due">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="dcn">Discount</label>
+                                    <input id="dcn" type="number" placeholder="Enter Discount Here"
+                                        class="form-control form-control-md" name="discount" id="" required>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary" value="Add Sale">
+                                <button type="reset" class="btn btn-danger">Reset</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 table-responsive table-hover">
+                <table class="data-tables table mb-0 tbl-server-info">
+                    <thead class="bg-white text-uppercase">
+                        <tr class="ligth ligth-data">
+                            <th>Product</th>
+                            <th>Code</th>
+                            <th>Price</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody class="ligth-body">
+                        {% for p in pro %}
+                        <tr data-product-id="{{ p.id }}" data-product-name="{{ p.product_name }}">
+                            <td>{{ p.product_name }}</td>
+                            <td>{{ p.product_code }}</td>
+                            <td>${{ p.product_price }}</td>
+                            <td>${{ p.product_cost }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center">
+    <p>Total Price: <span id="totalPrice">$0.00</span></p>
+</div>
+
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectedProductsTableBody = document.getElementById("selectedProductsTableBody");
+        const productRows = document.querySelectorAll(".ligth-body tr");
+
+        const selectedProducts = {}; // Create an object to hold the selected products
+
+        productRows.forEach(row => {
+            row.addEventListener("click", function () {
+                const productName = row.getAttribute("data-product-name");
+
+                // Create a new row for the selected product
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>${productName}</td>
+                    <td><input type="number" class="form-control form-control-sm" name="product_price_${productName}" ></td>
+                    <td><input type="number" class="form-control form-control-sm" name="product_cost_${productName}" ></td>
+                    <td>
+                       
+                            <div class="input-group">
+                              <input type="number" class="form-control form-control-sm" name="product_quantity_${productName}" aria-label="Text input with dropdown button">
+                              <select class="form-select form-select-sm" name="product_howmuch_${productName}">
+                                <option value="kg">KG</option>
+                                <option value="liter">Liter</option>
+                                <option value="piece">Piece</option>
+                              </select>
+                            </div>
+                         
+                      </td>
+                      <td><button class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i> </button></td>
+                      
+                `;
+
+                // Append the new row to the selected products table
+                selectedProductsTableBody.appendChild(newRow);
+
+                // Store the selected product information in the selectedProducts object
+                selectedProducts[productName] = {
+                    price: '',
+                    cost: '',
+                    quantity: '',
+                    howmuch:''
+                };
+
+                // Add event listener to remove the row
+                const removeButton = newRow.querySelector(".remove-product");
+                removeButton.addEventListener("click", function () {
+                    selectedProductsTableBody.removeChild(newRow);
+                    delete selectedProducts[productName];
+                });
+            });
+        });
+
+        // Submit the form with the selected product data as JSON
+        const selectedProductsForm = document.getElementById("selectedProductsForm");
+        selectedProductsForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Populate the selectedProducts object with input values
+            for (const productName in selectedProducts) {
+                selectedProducts[productName].price = document.querySelector(`[name="product_price_${productName}"]`).value;
+                selectedProducts[productName].cost = document.querySelector(`[name="product_cost_${productName}"]`).value;
+                selectedProducts[productName].quantity = document.querySelector(`[name="product_quantity_${productName}"]`).value;
+                selectedProducts[productName].howmuch = document.querySelector(`[name="product_howmuch_${productName}"]`).value;
+            }
+
+            // Add the JSON data to a hidden input field in the form
+            const selectedProductsInput = document.createElement("input");
+            selectedProductsInput.type = "hidden";
+            selectedProductsInput.name = "selected_products_json";
+            selectedProductsInput.value = JSON.stringify(selectedProducts);
+            selectedProductsForm.appendChild(selectedProductsInput);
+
+            // Submit the form
+            selectedProductsForm.submit();
+        });
+
+    });
+</script>
+{% endblock %}
+
+<!-- _______new js code for realtime total price -->
+
+
+<script>document.addEventListener("DOMContentLoaded", function () {
+    const selectedProductsTableBody = document.getElementById("selectedProductsTableBody");
+    const productRows = document.querySelectorAll(".ligth-body tr");
+
+    const selectedProducts = {}; // Create an object to hold the selected products
+
+    productRows.forEach(row => {
+        row.addEventListener("click", function () {
+            const productName = row.getAttribute("data-product-name");
+
+            // Create a new row for the selected product
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>${productName}</td>
+                <td><input type="number" class="form-control form-control-sm" name="product_price_${productName}" ></td>
+                <td><input type="number" class="form-control form-control-sm" name="product_cost_${productName}" ></td>
+                <td>
+                   
+                        <div class="input-group">
+                          <input type="number" class="form-control form-control-sm" name="product_quantity_${productName}" aria-label="Text input with dropdown button">
+                          <select class="form-select form-select-sm" name="product_howmuch_${productName}">
+                            <option value="kg">KG</option>
+                            <option value="liter">Liter</option>
+                            <option value="piece">Piece</option>
+                          </select>
+                        </div>
+                     
+                  </td>
+                  <td><button class="btn btn-danger btn-sm remove-product"><i class="fas fa-trash"></i> </button></td>
+            `;
+
+            // Append the new row to the selected products table
+            selectedProductsTableBody.appendChild(newRow);
+
+            // Store the selected product information in the selectedProducts object
+            selectedProducts[productName] = {
+                price: '',
+                cost: '',
+                quantity: '',
+                howmuch: ''
+            };
+
+            // Add event listener to remove the row
+            const removeButton = newRow.querySelector(".remove-product");
+            removeButton.addEventListener("click", function () {
+                selectedProductsTableBody.removeChild(newRow);
+                delete selectedProducts[productName];
+                updateTotalPrice();
+            });
+
+            // Add event listeners for input changes to trigger the total price update
+            const priceInput = newRow.querySelector(`[name="product_price_${productName}"]`);
+            priceInput.addEventListener("input", updateTotalPrice);
+            const costInput = newRow.querySelector(`[name="product_cost_${productName}"]`);
+            costInput.addEventListener("input", updateTotalPrice);
+            const quantityInput = newRow.querySelector(`[name="product_quantity_${productName}"]`);
+            quantityInput.addEventListener("input", updateTotalPrice);
+        });
+    });
+
+    // Function to calculate and update the total price
+    function updateTotalPrice() {
+        let total = 0;
+
+        // Calculate the subtotal based on the selected products
+        for (const productName in selectedProducts) {
+            const quantity = parseFloat(selectedProducts[productName].quantity);
+            const price = parseFloat(selectedProducts[productName].price);
+            const cost = parseFloat(selectedProducts[productName].cost);
+
+            if (!isNaN(quantity) && !isNaN(price) && !isNaN(cost)) {
+                const subtotal = (quantity * price) - (quantity * cost);
+                total += subtotal;
+            }
+        }
+
+        // Get the delivery charge and discount values
+        const deliveryCharge = parseFloat(document.querySelector('#dc').value) || 0;
+        const discount = parseFloat(document.querySelector('#dcn').value) || 0;
+
+        // Calculate the total price including delivery charge and discount
+        total = total + deliveryCharge - discount;
+
+        // Update the total price element in the HTML
+        const totalPriceElement = document.getElementById("totalPrice");
+        totalPriceElement.textContent = `$${total.toFixed(2)}`;
+    }
+
+    // Add event listeners for input changes to trigger the total price update
+    document.querySelector('#dc').addEventListener("input", updateTotalPrice);
+    document.querySelector('#dcn').addEventListener("input", updateTotalPrice);
+
+    // Initial calculation
+    updateTotalPrice();
+});
+</script>
+
+
+
+
+<!-- theviewd -->
+
+from django.shortcuts import render,redirect
+from django.contrib.auth.models import User,auth
+from django.contrib.auth import authenticate,login,logout
+
+from .models import productdetails,customerdetails,fullDetails,SelectedProduct,expence,addcash,User
+from .forms import productdetailsforms,customerdetailsforms,fulldetailsforms,expencesforms,addcashforms
+from django.contrib import messages
+from django.http import JsonResponse
+import json
+from django.utils import timezone
+from datetime import datetime
+
+# Create your views here.
+
+
+def logout(request):
+    auth.logout(request)
+    messages.success(request,'Loged Out Successfully')
+    return render(request,'login.html')
+
+def adduser(request):
+    if request.method == 'POST':
+        username= request.POST.get('username')
+        email= request.POST.get('email')
+        password1= request.POST.get('password1')
+        password2= request.POST.get('password2')
+        if password1!=password2:
+            messages.warning(request,'Enter both password same')
+        elif User.objects.filter(email=email).exists():
+            messages.warning(request,'Email Already exist!')
+        elif User.objects.filter(username=username).exists():
+            messages.warning(request,'Username Already exist!')
+        elif len(password1)<8:
+            messages.warning(request,"Password is too short!") 
+        else:
+            user = User.objects.create_user(email=email, password=password1,username=username)
+            user.save()
+            messages.success(request,"id created") 
+            return redirect('adduser')
+
+    return render(request, 'adduser.html')
+
+def userlogin(request):
+    if request.method == 'POST':
+        username= request.POST.get('username')
+        email= request.POST.get('email')
+        password= request.POST.get('password')
+        print(username,password)
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'loggedin')
+            return redirect('home')
+
+        else:
+            messages.warning(request, 'Invalid login credentials')
+            return redirect('userlogin')
+    return render(request,'login.html')
+
+
+def home(request):
+    total = fullDetails.objects.all()
+    cash = addcash.objects.all()
+    exp = expence.objects.all()
+    rnc= fullDetails.objects.filter(getmoney_status=False)
+
+    totalcost,total_amount,total_profit,total_cash,total_expence,total_due,due_for_cash = 0,0,0,0,0,0,0
+    for tp in total:
+        if tp.Bazartaka is not None: #for all bazar taka
+            totalcost += tp.Bazartaka
+        if tp.due is not None: #for all due
+            total_due += tp.due
+        if tp.due is not None and tp.getmoney_status is True: #for all due
+            due_for_cash+= tp.due
+        if tp.total_price is not None and tp.getmoney_status is True: #for all get taka from customer
+            total_amount += tp.total_price
+        if tp.profit is not None and tp.getmoney_status is True: 
+            total_profit += tp.profit
+            
+    for c in cash:
+        if c.amount is not None:
+            total_cash+=c.amount
+
+  
+    for x in exp:
+        if x.amount is not None:
+            total_expence += x.amount
+    bazartk=0
+    for r in rnc:
+        bazartk += r.Bazartaka
+    incas = total_cash-bazartk
+    incash=incas+total_profit-total_expence-due_for_cash
+    expected_cash=incas+total_profit-total_expence
+    context={'totaltaka':totalcost,'total_amount':total_amount,'total_profit':total_profit,'incash':incash,'total_expence':total_expence,'total_due':total_due,'expected_cash':expected_cash}
+    return render(request, 'index.html',context)
+
+
+def page_list_product(request):
+    pro = productdetails.objects.all()
+    return render(request, 'page/page_list_product.html',{'pro':pro})
+
+
+def page_list_purchase(request):
+    plp = fullDetails.objects.all().order_by('-id')
+    return render(request, 'page/page_list_purchase.html',{'plp':plp})
+
+def page_add_sale_pending(request):
+    plp = fullDetails.objects.filter(delevery_status=False)
+    return render(request, 'page/page_add_sale_pending.html',{'plp':plp})
+
+
+
+
+def page_add_sale(request,id):
+    p = fullDetails.objects.get(id=id)
+    pro = productdetails.objects.all()
+    thememoid = id    
+    if request.method == 'POST':
+        try:
+            selected_products_json = request.POST.get('selected_products_json')
+            selected_products = json.loads(selected_products_json)
+            delevery_charge = request.POST.get('delevery_charge')
+            discount = request.POST.get('discount')  # Corrected field name
+            thedue = request.POST.get('due',0) 
+            p.delevery_charge = delevery_charge
+            p.discount = discount
+            total_products_price = 0
+            for product_name, product_data in selected_products.items():
+                product_price =float(product_data['price']) 
+                product_cost = product_data['cost']
+                product_quantity =float(product_data['quantity']) 
+                product_howmuch = product_data['howmuch']
+
+                subtotal = float(product_price)*float(product_quantity)
+                total_products_price += int(subtotal)
+
+                SelectedProduct.objects.create(fullDetails=p, product_name=product_name,product_price=product_price,product_cost=product_cost,product_quantity=product_quantity,Product_howmuch=product_howmuch,subtotal=subtotal )
+
+            p.total_price = int(total_products_price) + int(delevery_charge) - int(discount)
+            p.bazar_commission= total_products_price-p.Bazartaka
+            p.due= int(thedue)
+            p.delevery_status = True  
+            p.save()
+            return invoice(request,thememoid)
+        except json.JSONDecodeError:
+            messages.error(request, 'Invalid JSON data for selected products.')
+        
+
+    context = {
+        'p':p,
+        'pro': pro
+    }     
+    return render(request, 'page/page_add_sale.html', context)
+
+
+
+
+def invoice(request,thememoid):
+    invdetails = fullDetails.objects.get(id=thememoid)
+    memo=invdetails.memono
+    sales_Products_details= SelectedProduct.objects.filter(fullDetails__memono=memo)
+    context={
+        'memono':memo,
+        'sales_Products_details':sales_Products_details,
+        'invdetails':invdetails,
+        'tp': invdetails.total_price-invdetails.due
+    }
+    return render(request,'invoice.html',context)
+
+
+
+
+def page_add_purchase(request):
+    plc = customerdetails.objects.all()
+    pro = productdetails.objects.all()
+    fu=fullDetails.objects.last()
+    mem=int(fu.memono)+1 if fu else 23001
+    if request.method == 'POST':
+        c =request.POST.get('customercode')
+        form = fulldetailsforms(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Purches details added succesfully')         
+            return redirect('page_list_purchase')
+        else:
+            print(form.errors)
+            return render(request, 'page/page_add_purchase.html',{'form':form})
+    else:
+        form = fulldetailsforms()
+    context={'plc':plc,'pro':pro,'memo':mem}
+    return render(request, 'page/page_add_purchase.html',context)
+
+
+
+
+
+def page_add_customer(request):
+    if request.method == 'POST':
+        form = customerdetailsforms(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Customer added succesfully')
+            return redirect('page_list_customer')
+        else:
+            print(form.errors)
+            return render(request, 'page/page_add_customer.html',{'form':form})
+    else:
+        form = customerdetailsforms()
+    return render(request, 'page/page_add_customer.html')
+
+
+
+def page_list_customer(request):
+    plc = customerdetails.objects.all()
+    return render(request, 'page/page_list_customer.html',{'plc':plc})
+
+def page_add_product(request):
+    if request.method == 'POST':
+        form = productdetailsforms(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Product added succesfully')
+            return redirect('page_list_product')
+        else:
+            print(form.errors)
+            return render(request, 'page/page_add_product.html',{'form':form})
+
+    else:
+        form = productdetailsforms()
+    return render(request, 'page/page_add_product.html',{'form':form})
+
+def bazar_back(request,id):
+    given_bazar_taka= fullDetails.objects.get(id=id)
+    if request.method== 'POST':
+        back_tk = request.POST.get('back_taka')
+        excess_tk = int(back_tk)
+        given_bazar_taka.Bazartaka= given_bazar_taka.Bazartaka-excess_tk
+        given_bazar_taka.save()
+        messages.success(request, 'Updated successfully')
+        return redirect('page_list_purchase')
+    return render(request, 'index.html')
+
+
+
+def page_bill_confirmation(request,bill_id=None):
+    p = fullDetails.objects.filter(getmoney_status=False).order_by('-id')
+    if bill_id is not None:
+        # Handle bill update here (e.g., mark as received)
+        bill = fullDetails.objects.get(id=bill_id)
+        bill.getmoney_status = True
+        bill.profit=bill.total_price-bill.Bazartaka-bill.discount
+        bill.total_price -= bill.due
+        bill.save()
+        messages.success(request,'Bill recived')
+        return redirect('page_bill_confirmation')  # Redirect to the same page
+    return render(request,'page/page_bill_confirmation.html',{'plp':p})
+
+def page_list_sale(request):
+    all = fullDetails.objects.all().order_by('-id')
+    allpro = SelectedProduct.objects.all()
+    return render(request, 'page/page_list_sale.html',{'all':all})
+
+def expencees(request):
+    ex =expence.objects.all().order_by('-id')
+    if request.method == 'POST':
+        form = expencesforms(request.POST)
+        if form.is_valid():
+            expense = form.save(commit=False)
+            expense.recorded_by = request.user.username
+            expense.save()
+            messages.success(request, 'Expense added')
+            return redirect('expencees')
+        else:
+            print(form.errors)
+            messages.error(request, 'Fill All the Fields')
+            return render(request, 'CED/expence.html',{'form':form}) 
+    return render(request, 'CED/expence.html',{'ex':ex})
+
+
+def addcashes(request):
+    cash = addcash.objects.all().order_by('-id')
+    if request.method == 'POST':
+        form = addcashforms(request.POST)
+        if form.is_valid():
+            ac = form.save(commit=False)
+            ac.recorded_by = request.user.username
+            ac.save()
+            messages.success(request,'Cash Added!!')
+            return redirect('addcashes')
+        else:
+            messages.error(request, 'Fill All the Fields')
+            print(form.errors)
+            return render(request, 'CED/addcash.html',{'form':form})
+    return render(request, 'CED/addcash.html',{'cash':cash})
+
+
+def dues(request, memodeo=None):
+    fu = fullDetails.objects.filter(delevery_status=True)
+    cutomer = fullDetails.objects.all()
+    if memodeo is not None:
+        mainmemo = fullDetails.objects.get(memono=memodeo)
+        deoback = request.POST.get('due_back')
+        mainmemo.due-=int(deoback)
+        mainmemo.save()
+        messages.success(request, 'Deo Back added!')
+        return redirect('dues')  # Redirect without memodeo parameter
+        
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        memodeo = request.POST.get('memodeo')
+        due_taken_by = request.POST.get('due_taken_by')
+        try:
+            f = fullDetails.objects.get(memono=memodeo)
+            f.due+=int(amount)
+            f.save()
+            messages.success(request, f"Due added for {memodeo} No. memo")
+            return redirect('dues')
+        except:
+            messages.error(request, f"error for {memodeo} No. memo")
+            return redirect('dues')
+    
+    return render(request, 'CED/due.html', {'fu': fu,'cutomer':cutomer})
+
+
+
+def memodetails(request,memono):
+    totalPP=0
+    invdetails = fullDetails.objects.get(memono=memono)
+    sales_Products_details= SelectedProduct.objects.filter(fullDetails__memono=memono)
+    for s in sales_Products_details:
+        if s.product_price is not None:
+            totalPP += s.subtotal
+    context={
+        'memono':memono,
+        'sales_Products_details':sales_Products_details,
+        'invdetails':invdetails,
+        'totalPP':totalPP
+    }
+    return render(request, 'page/memodetails.html',context)
+
+
+
+def report(request):
+    if request.method == 'POST':
+        time = request.POST.get('input_date')
+        te=expence.objects.filter(time__date=time).order_by('-id')
+        cash=addcash.objects.filter(time__date=time).order_by('-id')
+        bazd= fullDetails.objects.filter(time__date= time).order_by('-id')
+        today_cash,total_cost,total_sale,today_exp,total_D_C,total_B_C,total_due=0,0,0,0,0,0,0
+
+        for c in cash:
+            if c.amount is not None:
+                 today_cash +=c.amount
+        for ce in te:
+            if ce.amount is not None:
+                 today_exp +=ce.amount
+                    
+
+        for e in bazd:
+            total_cost += e.Bazartaka
+            total_due += e.due
+            if e.delevery_charge and e.bazar_commission and e.total_price is not None and e.getmoney_status is True: 
+                total_D_C +=e.delevery_charge
+                total_B_C += e.bazar_commission
+                total_sale += e.total_price
+
+        context={
+        'te':te,
+        'cash':cash,
+        'bazd':bazd,
+        'total_due':total_due,
+        'input_date':time,
+        'today_cash':today_cash,
+        'total_cost':total_cost,
+        'total_sale':total_sale,
+        'today_exp':today_exp,
+        'total_D_C':total_D_C,
+        'total_B_C':total_B_C,
+        'toco':total_B_C+total_D_C
+
+        }
+
+        return render(request, 'page/report.html',context)
+    return render(request, 'page/report.html')
+
+
+
+
+
+
+
+    # views.py
+
+from django.shortcuts import render
+from django.db.models import Sum
+from datetime import date
+
+from .models import expence
+
+def expense_chart():
+    today = date.today()
+    expenses_by_day = expence.objects.filter(time__date=today).values('time__day').annotate(total_amount=Sum('amount'))
+    
+    expense_data = []
+    for entry in expenses_by_day:
+        expense_data.append(entry['total_amount'])
+        print(expense_data)
+    context = {
+        'expense_data': expense_data
+    }
+    
+    return expense_data
+
+
+
+
+
+            
+    except (ValueError, TypeError):
+    SelectedProduct.objects.filter(fullDetails=p).delete()
+    messages.error(request, 'Invalid numeric values.')
